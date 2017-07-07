@@ -1,5 +1,5 @@
 import gym
-# from gym.wrappers.monitoring import Monitor
+from gym.wrappers.monitoring import Monitor
 from random import randint
 import time
 import math
@@ -11,34 +11,72 @@ def learn(episodeCount, stepsHistory, decayHistory, i_learn):
 	for i_episode in range(episodeCount):  # Start an episode
 		obs = env.reset()
 		# Reset reward count and states/actions for this episode
-		episodeStatesActions = []
-		totalRewards = 0
 		# Compute the decay of the exploration
-		decayX = 0.1
-		decayY = 40
+		decayX = 0.5
+		decayY = 50
 		decay = max(-i_episode*decayX+decayY, 10/(i_episode+1))
 		decayHistory[i_episode] = decay
+		doEpisodeMC(obs, decay, i_episode, i_learn)
+		#doEpisodeTD(obs, decay, i_episode, i_learn)
 
-		for t in range(200):
-			state = getState(obs)  # Get the state
-			action = policy(state, decay)  # Get the action
-			episodeStatesActions.append({'state': state, 'action': action})  # Save state and action to episodeStatesActions
-			obs, reward, done, _ = env.step(action)  # Apply the action
-			totalRewards += reward  # Update total reward for this episode
-			if done:  # Episode is over
-				stepsHistory[i_episode] = (stepsHistory[i_episode]*i_learn + t+1)/(i_learn+1)
-				for state_action in episodeStatesActions:  # Update value for chosen actions
-					updatePolicy(state_action['state'], state_action['action'], totalRewards)
-				break
+
+def doEpisodeMC(obs, decay, i_episode, i_learn):
+	episodeStatesActions = []
+	totalRewards = 0
+	for t in range(200):
+		state = getState(obs)  # Get the state
+		action = policy(state, decay)  # Get the action
+		episodeStatesActions.append({'state': state, 'action': action})  # Save state and action to episodeStatesActions
+		obs, reward, done, _ = env.step(action)  # Apply the action
+		totalRewards += reward  # Update total reward for this episode
+		if done:  # Episode is over
+			print episodeStatesActions[t]['action'], history[episodeStatesActions[t]['state']]
+			stepsHistory[i_episode] = (stepsHistory[i_episode]*i_learn + t+1)/(i_learn+1)
+			for i, state_action in enumerate(episodeStatesActions):  # Update value for chosen actions
+				updatePolicyMC(state_action['state'], state_action['action'], totalRewards-i)
+			break
+
+
+def doEpisodeTD(obs, decay, i_episode, i_learn):
+	episodeStatesActions = []
+	lastState  = None
+	lastAction = None
+	for t in range(200):
+		state = getState(obs)  # Get the state
+		action = policy(state, decay)  # Get the action
+		episodeStatesActions.append({'state': state, 'action': action})  # Save state and action to episodeStatesActions
+		obs, reward, done, _ = env.step(action)  # Apply the action
+		if t > 0:
+			updatePolicyTD(lastState, lastAction, state, action, reward)
+		lastState  = state
+		lastAction = action
+		if done:  # Episode is over
+			stepsHistory[i_episode] = (stepsHistory[i_episode]*i_learn + t+1)/(i_learn+1)
+			break
 
 
 # @param state <string> the state to update
 # @param action <int> the action to update
 # @param <int> the reward
-def updatePolicy(state, action, rewards):
+def updatePolicyMC(state, action, G):
 	a = history[state][action]
-	a['value'] = (a['value'] * a['count'] + rewards) / (a['count'] + 1)
+	a['value'] = (a['value'] * a['count'] + G) / (a['count'] + 1)
 	a['count'] += 1
+
+
+def updatePolicyMCa(state, action, G):
+	a = history[state][action]
+	a['value'] = a['value'] + 0.1 * (G - a['value'])
+
+
+# @param state <string> the state to update
+# @param action <int> the action to update
+# @param <int> the reward
+def updatePolicyTD(state1, action1, state2, action2, reward):
+	a1 = history[state1][action1]
+	a2 = history[state2][action2]
+	a1['value'] = a1['value'] + 0.1 * (reward + 1 * a2['value'] - a1['value'])
+	a1['count'] += 1
 
 
 # @param obs <[float]> the observation to convert into a state
@@ -46,16 +84,18 @@ def updatePolicy(state, action, rewards):
 # If the set of observations where never met, create the state
 # The function reduces the number of possible states
 def getState(obs):
-	return str(math.floor(obs[0]))
-	+str(math.floor(obs[1]))
-	+str(math.floor(obs[2]))
-	+str(math.floor(obs[3]))
+	state = ''
+	state += str(math.floor(obs[0]))
+	state += str(math.floor(obs[1]))
+	state += str(math.floor(obs[2]))
+	state += str(math.floor(obs[3]))
+	return state
 
 
 # @param state <string>
-# @param episode <int>
+# @param decay <int>
 # @return an action
-# The policy progressivly stops exploration and get greedy
+# The policy progressivly stops exploration and gets greedy
 def policy(state, decay):
 	# Get the less explored action and the most valued action
 	maxValueAction = env.action_space.sample()
@@ -71,22 +111,25 @@ def policy(state, decay):
 		if stateValues[minCountAction]['count'] > stateValues[action]['count']:
 			minCountAction = action
 	# Computing the decay of the exploration
-	if randint(0, 100) < decay:
+	if stateValues[minCountAction]['count'] < 100 and randint(0, 100) < decay:
 		return minCountAction
 	else:
 		return maxValueAction
 
 
-nbEpisodes = 1000
+nbEpisodes = 1500
 stepsHistory = [0]*nbEpisodes
 env = gym.make('CartPole-v0')
-for i in range(3):
+#env = Monitor(env, 'tmp/cart-pole', force=True)
+for i in range(1):
 	print i
-	history = {}  # 'state' ==> 'action'
+	history = {}  # 'state' ==> [{'count': int, 'value': float}]
 	decayHistory = [0]*nbEpisodes
 	learn(nbEpisodes, stepsHistory, decayHistory, i)
 env.close()
-
-plt.plot(range(nbEpisodes), stepsHistory, range(nbEpisodes), decayHistory)
+#for state in history.keys():
+	#print state, history[state]
+#gym.upload('tmp/cart-pole', api_key='sk_QoYvL963TwnAqSJXZLOQ') 
+plt.plot(range(nbEpisodes), stepsHistory, range(nbEpisodes), decayHistory, range(nbEpisodes), [195]*nbEpisodes)
 plt.ylabel('Number of steps')
 plt.show()
