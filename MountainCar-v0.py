@@ -111,7 +111,7 @@ def policy(state, i_episode):
 			minCountAction = action
 	# Computing the decay of the exploration
 	if randint(0, 100) < 10 and stateValues[minCountAction]['count'] < 100:
-		decayHistory[i_episode] -= 1
+		decayHistory[i_episode] += 1
 		return minCountAction
 	else:
 		return maxValueAction
@@ -135,5 +135,5 @@ for key in history.keys():
 	print key, "	", totalCount
 # gym.upload('tmp/cart-pole', api_key='sk_QoYvL963TwnAqSJXZLOQ')
 plt.plot(range(nbEpisodes), stepsHistory, range(nbEpisodes), decayHistory, range(nbEpisodes), [-110]*nbEpisodes)
-plt.ylabel('Number of steps')
+plt.ylabel('Number of rewards')
 plt.show()

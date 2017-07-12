@@ -1,5 +1,5 @@
 import gym
-# from gym.wrappers.monitoring import Monitor
+from gym.wrappers.monitoring import Monitor
 from random import randint
 import math
 import matplotlib.pyplot as plt
@@ -24,7 +24,7 @@ def doEpisodeMC(i_episode, i_learn):
 		if done:  # Episode is over
 			stepsHistory[i_episode] = (stepsHistory[i_episode]*i_learn + t+1)/(i_learn+1)
 			for i, state_action in enumerate(episodeStatesActions):  # Update value for chosen actions
-				updatePolicyMCa(state_action['state'], state_action['action'], totalRewards-i)
+				updatePolicyMC(state_action['state'], state_action['action'], totalRewards-i)
 			break
 
 
@@ -34,7 +34,7 @@ def doEpisodeTD(i_episode, i_learn):
 	lastState  = None
 	lastAction = None
 	reward     = 0
-	for t in range(200):
+	for t in range(2000):
 		state = getState(obs)  # Get the state
 		action = policy(state, i_episode)  # Get the action
 		episodeStatesActions.append({'state': state, 'action': action})  # Save state and action to episodeStatesActions
@@ -112,17 +112,17 @@ def policy(state, i_episode):
 		return maxValueAction
 
 
-nbEpisodes = 5000
+nbEpisodes = 1000
 stepsHistory = [0]*nbEpisodes
-env = gym.make('CartPole-v0')
-#env = Monitor(env, 'tmp/cart-pole', force=True)
+env = gym.make('LunarLander-v2')
+env = Monitor(env, 'tmp/cart-pole', force=True)
 for i in range(6):
 	print i
 	history = {}  # 'state' ==> [{'count': int, 'value': float}]
 	explorationHistory = [0]*nbEpisodes
 	learn(nbEpisodes, i)
 env.close()
-#gym.upload('tmp/cart-pole', api_key='sk_QoYvL963TwnAqSJXZLOQ')
+# gym.upload('tmp/cart-pole', api_key='sk_QoYvL963TwnAqSJXZLOQ')
 plt.plot(range(nbEpisodes), stepsHistory, range(nbEpisodes), explorationHistory, range(nbEpisodes), [195]*nbEpisodes)
 plt.ylabel('Number of rewards')
 plt.show()
