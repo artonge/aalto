@@ -1,26 +1,23 @@
 import gym
-from gym.wrappers.monitoring import Monitor
-from random import randint
-import time
+# from gym.wrappers.monitoring import Monitor
 import math
+from random import randint
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def learn(episodeCount, stepsHistory, decayHistory):
 	for i_episode in range(episodeCount):  # Start an episode
-		obs = env.reset()
-		# Reset reward count and states/actions for this episode
 		# Compute the decay of the exploration
 		decayX = 0.5
 		decayY = 50
 		decay = max(-i_episode*decayX+decayY, 10/(i_episode+1))
 		decayHistory[i_episode] = decay
 		#doEpisodeMC(obs, decay, i_episode)
-		doEpisodeTD(obs, decay, i_episode)
+		doEpisodeTD(decay, i_episode)
 
 
-def doEpisodeMC(obs, decay, i_episode):
+def doEpisodeMC(decay, i_episode):
+	obs = env.reset()
 	episodeStatesActions = []
 	totalRewards = 0
 	for t in range(200):
@@ -36,10 +33,12 @@ def doEpisodeMC(obs, decay, i_episode):
 			break
 
 
-def doEpisodeTD(obs, decay, i_episode):
+def doEpisodeTD(decay, i_episode):
+	obs = env.reset()
 	episodeStatesActions = []
 	lastState  = None
 	lastAction = None
+	reward = 0
 	for t in range(200):
 		state = getState(obs)  # Get the state
 		action = policy(state, decay)  # Get the action
@@ -105,11 +104,11 @@ def policy(state, decay):
 		return action
 	else:
 		# Get the less explored action and the most valued action
-		maxValueAction = None		
+		maxValueAction = None
 		for action in stateValues.keys():
 			if maxValueAction == None or stateValues[stringifyBox(maxValueAction)]['value'] < stateValues[action]['value']:
 				maxValueAction = stateValues[action]['action']
-		
+
 		return maxValueAction
 
 
@@ -124,7 +123,7 @@ learn(nbEpisodes, stepsHistory, decayHistory)
 env.close()
 for state in history.keys():
 	print state, history[state]
-#gym.upload('tmp/pendulum', api_key='sk_QoYvL963TwnAqSJXZLOQ') 
+#gym.upload('tmp/pendulum', api_key='sk_QoYvL963TwnAqSJXZLOQ')
 plt.plot(range(nbEpisodes), stepsHistory, range(nbEpisodes), decayHistory, range(nbEpisodes), [195]*nbEpisodes)
 plt.ylabel('Number of steps')
 plt.show()

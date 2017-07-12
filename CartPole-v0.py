@@ -1,8 +1,8 @@
 import gym
 from random import randint
 import math
-import numpy as np
 import matplotlib.pyplot as plt
+
 
 def learn(episodeCount):
 	for i_episode in range(episodeCount):  # Start an episode
@@ -59,10 +59,10 @@ def policy(state, decay):
 	# Get the less explored action and the most valued action
 	maxValueAction = env.action_space.sample()
 	minCountAction = env.action_space.sample()
-	if not history.has_key(state):  # If state does not existe, create it
+	if state not in history:  # If state does not existe, create it
 		history[state] = []
 		for _ in range(env.action_space.n):
-			history[state].append({'count':0, 'value':0})
+			history[state].append({'count': 0, 'value': 0})
 	stateValues = history[state]
 	for action in range(env.action_space.n):
 		if stateValues[maxValueAction]['value'] < stateValues[action]['value']:
