@@ -7,28 +7,19 @@ import matplotlib.pyplot as plt
 def learn(episodeCount):
 	for i_episode in range(episodeCount):  # Start an episode
 		obs = env.reset()
-		# Compute the decay of the exploration
-		decayX = 0.02
-		decayY = 20
-		decay = max(-i_episode*decayX+decayY, 10/(i_episode+1))
-		doEpisodeMC(obs, decay, i_episode)
-
-
-def doEpisodeMC(obs, decay, i_episode):
-	# Reset reward count and states/actions for this episode
-	episodeStatesActions = []
-	totalRewards = 0
-	for t in range(200):
-		state = getState(obs)  # Get the state
-		action = policy(state, decay)  # Get the action
-		episodeStatesActions.append({'state': state, 'action': action})  # Save state and action to episodeStatesActions
-		obs, reward, done, _ = env.step(action)  # Apply the action
-		totalRewards += reward  # Update total reward for this episode
-		if done:  # Episode is over
-			stepsHistory[i_episode] = t
-			for i, state_action in enumerate(episodeStatesActions):  # Update value for chosen actions
-				updatePolicyMC(state_action['state'], state_action['action'], totalRewards-i)
-			break
+		episodeStatesActions = []
+		totalRewards = 0
+		for t in range(200):
+			state = getState(obs)  # Get the state
+			action = policy(state, i_episode)  # Get the action
+			episodeStatesActions.append({'state': state, 'action': action})  # Save state and action to episodeStatesActions
+			obs, reward, done, _ = env.step(action)  # Apply the action
+			totalRewards += reward  # Update total reward for this episode
+			if done:  # Episode is over
+				stepsHistory[i_episode] = t
+				for i, state_action in enumerate(episodeStatesActions):  # Update value for chosen actions
+					updatePolicyMC(state_action['state'], state_action['action'], totalRewards-i)
+				break
 
 
 # @param state <string> the state to update
@@ -55,36 +46,36 @@ def getState(obs):
 # @param decay <int>
 # @return an action
 # The policy progressivly stops exploration and gets greedy
-def policy(state, decay):
+def policy(state, i_episode):
 	# Get the less explored action and the most valued action
-	maxValueAction = env.action_space.sample()
-	minCountAction = env.action_space.sample()
+	maxA = env.action_space.sample()
 	if state not in history:  # If state does not existe, create it
 		history[state] = []
 		for _ in range(env.action_space.n):
 			history[state].append({'count': 0, 'value': 0})
 	stateValues = history[state]
 	for action in range(env.action_space.n):
-		if stateValues[maxValueAction]['value'] < stateValues[action]['value']:
-			maxValueAction = action
-		if stateValues[minCountAction]['count'] > stateValues[action]['count']:
-			minCountAction = action
+		if stateValues[maxA]['value'] < stateValues[action]['value']:
+			maxA = action
 	# Computing the decay of the exploration
+	decay = 15*0.99**i_episode
+	decayHistory[i_episode] = decay
 	if randint(0, 100) < decay:
-		return minCountAction
+		return env.action_space.sample()
 	else:
-		return maxValueAction
+		return maxA
 
 
 env = gym.make('CartPole-v0')
-nbEpisodes = 2000
+nbEpisodes = 1000
 stepsHistory = [0]*nbEpisodes
+decayHistory = [0]*nbEpisodes
 
 history = {}  # 'state' ==> [{'count': int, 'value': float}]
 
 learn(nbEpisodes)
 
 env.close()
-plt.plot(range(nbEpisodes), stepsHistory, range(nbEpisodes), [195]*nbEpisodes)
+plt.plot(range(nbEpisodes), stepsHistory, range(nbEpisodes), decayHistory, range(nbEpisodes), [195]*nbEpisodes)
 plt.ylabel('Number of steps')
 plt.show()
