@@ -1,83 +1,72 @@
+#####
+# Monte Carlo
+#####
 import gym
 from gym.wrappers.monitoring import Monitor
 from random import randint
-import matplotlib.pyplot as plt
 import numpy as np
-from time import sleep
+import matplotlib.pyplot as plt
 
-def learn(episodeCount, i_learn):
+def learn(episodeCount):
 	for i_episode in xrange(episodeCount):
-		obs = env.reset()
-		episodeStatesActions = []
-		totalRewards = 0
-		for t in range(200):
-			env.render()
-			sleep(1)
-			action = policy(obs, i_episode)
-			obs, reward, done, _ = env.step(action['action'])
-			episodeStatesActions.append(action)
-			totalRewards += reward
-			if done:
-				rewardHistory[i_episode] += totalRewards
-				for i, a in enumerate(episodeStatesActions):
-					updatePolicy(a, totalRewards-i)
-				break
+		state     = env.reset()
+		actionStr = policy(state, i_episode)
+		done = False
+		while not done:
+			nextState, reward, done, _ = env.step(A[actionStr])
+			nextActionStr = policy(nextState, i_episode)
+			stepsHistory[i_episode] += reward
+			updatePolicy(state, actionStr, reward, nextState, nextActionStr)
+			state     = nextState
+			actionStr = nextActionStr
 
 
-def actionExists(obs, action):
-	for a in history[obs]:
-		if actionAreEqual(a['action'], action['action']):
-			return True
-	return False
+def updatePolicy(state, actionStr, reward, nextstate, nextactionStr):
+	y = 0.3
+	l = 0.6
+	alpha = 0.9
+	d = reward + y*Q[nextstate][nextactionStr] - Q[state][actionStr]
+	Z[state][actionStr] += 1
+	for s in Q:
+		for aStr in Q[s]:
+			Q[s][aStr] = Q[s][aStr] + alpha*d*Z[s][aStr]
+			Z[s][aStr] = y*l*Z[s][aStr]
 
 
-def actionAreEqual(action1, action2):
-	return action1[0] == action2[0] and action1[1] == action2[1] and action1[2] == action2[2]
-
-
-def updatePolicy(action, G):
-	action['value'] = (action['value'] * action['count'] + G) / (action['count'] + 1)
-	action['count'] += 1
-
-
-def policy(obs, i_episode):
-	# Create obs in history if it does not exist
-	if obs not in history: history[obs] = []
+def policy(state, i_episode):
+	if state not in Q: Q[state] = {}
+	if state not in Z: Z[state] = {}
 	# Get the most valued action
-	maxValueAction = None
-	for a in history[obs]:
-		if maxValueAction == None or a['value'] > maxValueAction['value']:
-			maxValueAction = a
+	maxValueActionStr = None
+	for actionStr in Q[state]:
+		if maxValueActionStr == None or Q[state][actionStr] > Q[state][maxValueActionStr]:
+			maxValueActionStr = actionStr
 	# If no maxValueAction or if it's time for exploration, return random action
-	if maxValueAction == None or randint(0, 100) < 20*0.99**i_episode:
-		explorationHistory[i_episode] += 1
-		randomAction = {'value': 0, 'action': env.action_space.sample(), 'count': 0}
-		if not actionExists(obs, randomAction):
-			history[obs].append(randomAction)
-		return randomAction
+	if maxValueActionStr == None or randint(0, 100) < 20*0.99**i_episode:
+		randomAction    = env.action_space.sample()
+		randomActionStr = str(randomAction[0]) + str(randomAction[1]) + str(randomAction[2])
+		if randomActionStr not in A       : A       [randomActionStr] = randomAction
+		if randomActionStr not in Q[state]: Q[state][randomActionStr] = 0
+		if randomActionStr not in Z[state]: Z[state][randomActionStr] = 0		
+		return randomActionStr
 	else:
-		return maxValueAction
+		return maxValueActionStr
 
 
-nbEpisodes = 100
-nbLearn = 1
-history = []
-rewardHistory = [0]*nbEpisodes
-explorationHistory = [0]*nbEpisodes
+nbEpisodes = 10000
+
 env = gym.make('Copy-v0')
-# print env.action_space
-# print env.observation_space
-# env = Monitor(env, 'tmp/cart-pole', force=True)
-for i in range(nbLearn):
-	print i
-	history = {}
-	explorationHistory = [0]*nbEpisodes
-	learn(nbEpisodes, i)
+# env = Monitor(env, 'tmp/copy', force=True)
+
+stepsHistory = [0]*nbEpisodes
+
+Q = {}  # state-action values
+Z = {}  # state-action eligibility traces
+A = {}  # actionStr to action map
+
+learn(nbEpisodes)
+
 env.close()
-# for o in history:
-# 	print o, history[o]
-#gym.upload('tmp/cart-pole', api_key='sk_QoYvL963TwnAqSJXZLOQ')
-# plt.plot(range(nbEpisodes), np.array(rewardHistory)/nbLearn)
-# plt.ylabel('Total rewards')
-# plt.xlabel('Episods')
-# plt.show()
+plt.plot(range(nbEpisodes), stepsHistory, range(nbEpisodes), [25]*nbEpisodes)
+plt.ylabel('Number of steps')
+plt.show()

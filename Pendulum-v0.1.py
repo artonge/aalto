@@ -9,31 +9,47 @@ def learn(episodeCount):
 	for i_episode in range(episodeCount):  # Start an episode
 		obs = env.reset()
 		for s in V.keys():
-			Z[s] = [0]*env.action_space.n
+			Z[s] = {}
+		totalRewards = 0
 		for t in range(200):
 			state = getState(obs)  # Get the state
 			action = policy(state, i_episode)  # Get the action
 			obs, reward, done, _ = env.step(action)  # Apply the action
+			totalRewards += reward			
 			updateValue(state, action, reward, getState(obs))
 			if done:  # Episode is over
-				stepsHistory[i_episode] = t
+				stepsHistory[i_episode] = totalRewards
 				break
+
+
+def maxAction(stateActions):
+	maxAction = None
+	for a, v in stateActions.items():
+		if maxAction == None or stateActions[maxAction]['value'] < v['value']:
+			maxAction = a
+	if maxAction == None:
+		return {'action': env.action_space.sample(), 'value': 0}
+	else:
+		return stateActions[maxAction]
 
 
 # @param state <string> the state to update
 # @param action <int> the action to update
 # @param G <int> the reward
 def updateValue(state, action, reward, nextstate):
-	y = 0.9
-	l = 0.95
-	alpha = 1
-	d = reward + y*V[nextstate][np.argmax(V[nextstate])] - V[state][action]
-	#print d
-	Z[state][action] = 1
-	for s in V.keys():
-		for a, v in enumerate(V[s]):		
-			V[s][a] = V[s][a] + alpha*d*Z[s][a]
-			if a == 0: Zhistory[s].append(Z[s][a])
+	y = 0.95
+	l = 0.6
+	alpha = 0.5
+	if stringifyBox(action) not in V[state]:
+		V[state][stringifyBox(action)] = {'action': action, 'value': 0}
+	d = reward + y*maxAction(V[nextstate])['value'] - V[state][stringifyBox(action)]['value']
+	Z[state][stringifyBox(action)] = 1
+	for s in V:
+		for a in V[s]:
+			if a not in Z[s]:
+				Z[s][a] = 0
+			V[s][a]['value'] = V[s][a]['value'] + alpha*d*Z[s][a]
+			Zhistory[s].append(Z[s][a])
 			Z[s][a] = y*l*Z[s][a]
 
 
@@ -42,14 +58,19 @@ def updateValue(state, action, reward, nextstate):
 # If the set of observations where never met, create the state
 # The function reduces the number of possible states
 def getState(obs):
-	state = ''
-	for o in obs:
-		state += str(math.floor(o))
+	state = stringifyBox(obs)
 	if state not in V:  # If state does not existe in V, create it
-		V[state] = [0]*env.action_space.n
-		Z[state] = [0]*env.action_space.n
+		V[state] = {}
+		Z[state] = {}
 		Zhistory[state] = []
 	return state
+
+
+def stringifyBox(box):
+	s = ''
+	for b in box:
+		s += str(math.floor(b))
+	return s
 
 
 # @param state <string>
@@ -57,32 +78,34 @@ def getState(obs):
 # @return an action
 # The policy progressivly stops exploration and gets greedy
 def policy(state, i_episode):
-	decay = 50*0.995**i_episode
+	decay = 50*0.95**i_episode
+	decayHistory[i_episode] = decay
 	if randint(0, 100) < decay:
-		exploration[i_episode] += 1
 		return env.action_space.sample()
 	else:
-		return np.argmax(V[state])
+		return maxAction(V[state])['action']
 
 
-env = gym.make('CartPole-v0')
-episodeCount = 1000
+env = gym.make('Pendulum-v0')
+episodeCount = 2000
 stepsHistory = [0]*episodeCount
-exploration = [0]*episodeCount
+decayHistory = [0]*episodeCount
+
 
 V = {}  # 'state' ==> [value <int>]
 Z = {}  # 'state' ==> [value <int>]
+actionMap = {} # 'stringifyed action' ==> raw action
 Zhistory = {}
 
 learn(episodeCount)
 
-for s in V:
-	print s, V[s] 
+#for s in V.keys():
+#	print s
 #	print s, '	', Z[s], '	', V[s]
 
 env.close()
 
-plt.plot(range(episodeCount), stepsHistory, range(episodeCount), exploration, range(episodeCount), [195]*episodeCount)
+plt.plot(range(episodeCount), stepsHistory, range(episodeCount), decayHistory, range(episodeCount), [-500]*episodeCount)
 #plt.plot(Zhistory[s])
 plt.ylabel('Number of steps')
 plt.show()
