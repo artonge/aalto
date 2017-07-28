@@ -6,7 +6,8 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
 	V = np.zeros(env.nS)
 	policy = np.ones([env.nS, env.nA])
 	delta = theta
-	while not delta >= theta:
+
+	while delta >= theta:
 		delta = 0
 		# Policy evaluation
 		for s in range(env.nS):
@@ -15,11 +16,11 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
 			actionsValues = np.zeros(env.nA)
 			for a in range(env.nA):
 				for  prob, next_state, reward, done in env.P[s][a]:
-					v += policy[s][a] * prob * (reward + discount_factor * V[next_state])
 					actionsValues[a] += prob * (reward + discount_factor * V[next_state])
-			delta = max(delta, np.abs(best_action_value - V[s]))
-			V[s] = v
 			bestAction = np.argmax(actionsValues)
+			bestActionValue = actionsValues[bestAction]
+			delta = max(delta, np.abs(bestActionValue - V[s]))
+			V[s] = bestActionValue
 			if oldBestAction != bestAction:
 				policyStable = False
 			policy[s] = np.eye(env.nA)[bestAction]
