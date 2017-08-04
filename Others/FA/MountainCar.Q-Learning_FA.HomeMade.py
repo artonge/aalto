@@ -5,17 +5,37 @@ import sys
 import plotting
 
 
+def buildC(N, size, i=0, base=[]):
+	if len(base) == 0: base = [0]*size
+	if i == size     : return [base]
+	C = np.empty([0, size], dtype=int)
+	for n in range(N+1):
+		b = np.array(base)
+		b[i] = n
+		C = np.concatenate((C, buildC(N, size, i+1, b)))
+	return C
+
+
 class Estimator():
 	def __init__(self):
-		self.w = [0] * (len(env.observation_space.sample()) + 1)
+		featuresSample = self.featurize_state(env.observation_space.sample(), env.action_space.sample())
+		self.w = np.zeros(len(featuresSample))
 
 	def featurize_state(self, s, a):
-		return np.concatenate((s, [a]))
+		S = np.concatenate((s, [a]))
+		N = 5
+		d = len(S)
+		C = buildC(N, d)
+		X = np.ones(len(C))
+		for i in range(len(C)):
+			for j in range(len(S)):
+				X[i] *= S[j] ** C[i][j]
+		return X
 
 	def predict(self, s, a=None):
 		if a != None:
 			# print(self,w, self.featurize_state(s, a), np.matmul(self.w, self.featurize_state(s, a)))
-			return np.matmul(self.w, self.featurize_state(s, a))
+			return np.matmul(self.featurize_state(s, a).T, self.w)
 		else:
 			values = [0] * env.action_space.n
 			for a in range(env.action_space.n):
@@ -44,6 +64,7 @@ def q_learning(env, estimator, num_episodes, discount_factor=1.0, epsilon=0.1, e
 	)
 
 	for i_episode in range(num_episodes):
+		# plotting.plot_cost_to_go_mountain_car(env, estimator)
 
 		# The policy we're following
 		policy = make_epsilon_greedy_policy(
@@ -83,4 +104,4 @@ estimator = Estimator()
 stats = q_learning(env, estimator, 100, epsilon=0.0)
 
 plotting.plot_cost_to_go_mountain_car(env, estimator)
-plotting.plot_episode_stats(stats, smoothing_window=25)
+# plotting.plot_episode_stats(stats, smoothing_window=25)
