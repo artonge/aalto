@@ -3,6 +3,7 @@ import matplotlib
 import numpy as np
 import sys
 import plotting
+from gym.wrappers.monitoring import Monitor
 
 
 def buildC(N, size, i=0, base=[]):
@@ -17,24 +18,25 @@ def buildC(N, size, i=0, base=[]):
 
 
 class Estimator():
+
 	def __init__(self):
-		featuresSample = self.featurize_state(env.observation_space.sample(), env.action_space.sample())
+		s = env.observation_space.sample()
+		a = env.action_space.sample()
+		S = np.concatenate((s, [a]))
+		self.C = buildC(1, len(S))
+		featuresSample = self.featurize_state(s, a)
 		self.w = np.zeros(len(featuresSample))
 
 	def featurize_state(self, s, a):
 		S = np.concatenate((s, [a]))
-		N = 5
-		d = len(S)
-		C = buildC(N, d)
-		X = np.ones(len(C))
-		for i in range(len(C)):
+		X = np.ones(len(self.C))
+		for i in range(len(self.C)):
 			for j in range(len(S)):
-				X[i] *= S[j] ** C[i][j]
+				X[i] *= S[j] ** self.C[i][j]
 		return X
 
 	def predict(self, s, a=None):
 		if a != None:
-			# print(self,w, self.featurize_state(s, a), np.matmul(self.w, self.featurize_state(s, a)))
 			return np.matmul(self.featurize_state(s, a).T, self.w)
 		else:
 			values = [0] * env.action_space.n
@@ -43,6 +45,7 @@ class Estimator():
 			return values
 
 	def update(self, s, a, y):
+		print((y - self.predict(s, a)) * self.featurize_state(s, a))
 		alpha = 0.01
 		self.w += alpha * (y - self.predict(s, a)) * self.featurize_state(s, a)
 
@@ -99,9 +102,10 @@ def q_learning(env, estimator, num_episodes, discount_factor=1.0, epsilon=0.1, e
 matplotlib.style.use('ggplot')
 
 env = gym.envs.make("MountainCar-v0")
+# env = Monitor(env, 'tmp/moutaincar', force=True)
 estimator = Estimator()
 
-stats = q_learning(env, estimator, 100, epsilon=0.0)
+stats = q_learning(env, estimator, 50, epsilon=0.0)
 
 plotting.plot_cost_to_go_mountain_car(env, estimator)
 # plotting.plot_episode_stats(stats, smoothing_window=25)
