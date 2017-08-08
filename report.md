@@ -23,30 +23,34 @@ for _ in range(1000):
     env.render()
     env.step(env.action_space.sample())
 ```
+For each step, the agent will take random action from the action space.
 
 ### Understanding of the code
 **Could have been nice to have**
 - A working example base on an environment of OpenAI Gym
-  + If possible without an external library (min viable machine learning system)
+  + If possible without an external library
 
 ```python
-import gym # Import gym library
+# Import gym library
+import gym
 
-env = gym.make('CartPole-v0') # Create a new CartPole-v0 environment
-# Test our agent twenty times
+# Create a new CartPole-v0 environment
+env = gym.make('CartPole-v0')
+# Learn for twenty episodes
 for i_episode in range(20):
-    observation = env.reset() # Reset the environment
-    # Take max 100 actions or stop when the environment is over
-    for t in range(100):
-        env.render() # Display the state of the environment
-        print(observation)
+    # Reset the environment
+    # Resetting gives us the first observation
+    observation = env.reset()
+    # Take step until the episode is done
+    # The episode is done when the environment tells us it's done
+    done = False
+    while not done:
+        # Display the state of the environment
+        env.render()
         # Compute actions
         # Trivial here, but should be the output of a machine learning system
         action = env.action_space.sample()
         observation, reward, done, info = env.step(action) # Apply actions to the environment
-        if done: # When done break
-            print("Episode finished after {} timesteps".format(t+1))
-            break
 ```
 
 #### Step's return value
