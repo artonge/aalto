@@ -15,20 +15,10 @@ Deep learning is a kind of AI base on how humans learn. It consists of layers wh
 ### Installation
 The installation and use are easy for anyone with basic computer science knowledge. You'll need to know the python programming language and how to install packages.
 After installing the following dependencies: `pip`, `cmake`, `swig`, and running: `pip install gym[all]`, you can use it like so:
-```python
-import gym
-env = gym.make('CartPole-v0')
-env.reset()
-for _ in range(1000):
-    env.render()
-    env.step(env.action_space.sample())
-```
-For each step, the agent will take random action from the action space.
 
 ### Understanding of the code
 **Could have been nice to have**
-- A working example base on an environment of OpenAI Gym
-  + If possible without an external library
+- A working example base on an environment of OpenAI Gym. If possible without an external library
 
 ```python
 # Import gym library
@@ -80,16 +70,28 @@ agent                       environment
 - I can record results
 
 
-#### Actual using of OpenAI Gym with Tensorflow
+## Actual using of OpenAI Gym with Tensorflow
 **Could have been nice to have**
 - What is a tensor
 
 I could not use the Gym as I had no practical knowledge on how to program machine learning systems, so I followed the tutorial of the Tensorflow library hoping to gain some. This tentative failed as I to little theoretical knowledge and Tensorflow seems to work like magic.
 
-## Knowledge learned from the book
-### Linear algebra
-- A *tensor* is a matrice with more than two axes
-- *Eigendecomposition* is way of representing matrices with smaller part to extract their properties
-- I skipped the remaining part
+
+## What I learned
+- You give a value to each states. The objective is to be in the highest value state. What gives you the value for a given state is your **value function**.
+
+- You'll build your value function from experience. The environment will sometime give you a reward when you behave correctly. Using one of the following: **MC**, **TD**, **SARSA**, **Q-Learning**, **FA**, you'll update some states value.
+
+- To find the highest value state you've seen, you use your experience. This is called **exploitation**. But to find the best state of all, you need some **exploration**. The balance between exploitation and exploration is defined be the **policy**. The policy dictate you behaviour. You can be greedy, which is exploitation or random which lead to exploration. You can also be e-gready, where you'll be random part of the time.
+
 
 ## Second use, with theoretical knowledge
+- Why some algorithms don't work on some environments ?
+I tried to implement TD, SARSA, Q-Learning, Eligibility traces on various environments without success.
+Only MC seems to work but only when the environment state is discrete or not to complicated.
+
+- How to read the learning curve and improve the algorithm buy tweaking the parameters.
+I've heard about over-fitting but not sure how to detect and prevent it.
+How do I know my algorithm is exploring to much/no enough.
+
+- Function approximation seems to be impossible without a library to support the core computing. Didn't find an example that show the manipulation of the weights, update and prediction. I tried to implement FA using polynomials, without success. I don't grasp fully how it works.

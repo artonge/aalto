@@ -22,13 +22,13 @@ class Estimator():
 	def __init__(self):
 		s = env.observation_space.sample()
 		a = env.action_space.sample()
-		S = np.concatenate((s, [a]))
+		S = np.concatenate(([1], s, [a]))
 		self.C = buildC(1, len(S))
 		featuresSample = self.featurize_state(s, a)
 		self.w = np.zeros(len(featuresSample))
 
 	def featurize_state(self, s, a):
-		S = np.concatenate((s, [a]))
+		S = np.concatenate(([1], s, [a]))
 		X = np.ones(len(self.C))
 		for i in range(len(self.C)):
 			for j in range(len(S)):

@@ -35,33 +35,39 @@ alpha = 0.1
 
 
 
-rList = []
-alpha=np.log(0.000001)/num_episodes
-for i in range(num_episodes):
-    lr= np.exp(alpha*i)
-    #Reset environment and get first new observation
-    s = env.reset()
-    rAll = 0
-    done=False
-    #The Q-Table learning algorithm
-    while done==False:
-        #Choose an action by greedily (with noise) picking from Q table
-        if np.random.rand() < lr*0.1:
-            a = np.random.randint(env.action_space.n)
-        else:
-            a = np.argmax(Q[s,:] )
-        #Get new state and reward from environment
-        s1,reward,done,_ = env.step(a)
-        if done:
-            r = 1.0 if reward > 0.0 else -1.0
-        else:
-            r = -0.01
-        #Update Q-Table with new knowledge
-        Q[s,a] = Q[s,a] +  lr*(r + y*np.max(Q[s1,:]) - Q[s,a])
-        rAll += reward
-        s = s1
-        if done == True:
-            break
-    #jList.append(j)
-    rList.append(rAll)
-print "Score over time: " + str(sum(rList[-100:])/100.0)
+def learn():
+	rList = []
+	alpha = np.log(0.000001)/num_episodes
+	for i in range(num_episodes):
+	    # lr = 0.99**i
+		lr = np.exp(alpha*i)
+	    #Reset environment and get first new observation
+	    state = env.reset()
+	    rAll = 0
+	    done = False
+	    #The Q-Table learning algorithm
+	    while not done:
+	        #Choose an action by greedily (with noise) picking from Q table
+	        if np.random.rand() < lr*0.1:
+	            action = np.random.randint(env.action_space.n)
+	        else:
+	            action = np.argmax(Q[state,:])
+	        #Get new state and reward from environment
+	        nextstate, reward, done, _ = env.step(action)
+	        if done:
+	            r = 1.0 if reward > 0.0 else -1.0
+	        else:
+	            r = -0.01
+	        #Update Q-Table with new knowledge
+	        Q[state, action] = Q[state, action] +  lr*(r + y * np.max(Q[nextstate,:]) - Q[state, action])
+	        rAll += reward
+	        state = nextstate
+
+	    rList.append(rAll)
+
+	return sum(rList[-100:])/100.0
+
+sum([learn() for i in range(10)])/10
+
+
+print "Score over time: " + str(sum([learn() for i in range(10)])/10)

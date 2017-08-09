@@ -1,3 +1,5 @@
+%matplotlib inline
+
 import gym
 import matplotlib
 import numpy as np
