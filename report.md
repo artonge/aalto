@@ -78,6 +78,7 @@ I could not use the Gym as I had no practical knowledge on how to program machin
 
 
 ## What I learned
+### Overview
 - You code the **agent** that will interact with the **environment**. The environment gives you the state he is in, and you need to find the best action for that state.
 
 - To find the best action, you use the **value function**. It map a state to a value.
@@ -86,20 +87,51 @@ I could not use the Gym as I had no practical knowledge on how to program machin
 
 - To find the highest value state you've seen, you use your experience. This is called **exploitation**. But to find the best state of all, you need some **exploration**. The balance between exploitation and exploration is defined be the **policy**. The policy dictate your behaviour. You can be greedy, which is exploitation or random which lead to exploration. You can also be e-greedy, where you'll be random part of the time.
 
-- The learning process is composed in **episode**, and each episode is composed of **steps**. The environment is reset between all episodes. Each steps is composed of: the state, the action taken from this state and the reward received when arriving in this state.
+- The learning process is composed in **episode**, and each episode is composed of **steps**. The environment is reset between all episodes. Each steps is composed of: the state, the action taken from this state and the reward received while taking the action in the state.
 
 - The return of a state is the cumulated reward received from the first encounter to the end of the episode.
 
-### Updating the value function
-- **TD(λ)**: *Temporal Difference*. Use the **return** to update the value of a state. In TD(λ) the return is discounted, using the discount factor λ. This factor will progressively decrease the impact of a reward on the previous states. The farther the state from the reward, the smaller the impact on its value.
+### Methods to update the value function
+- **Temporal Difference** - TD(λ) : Use the **return** to update the value of a state. In TD(λ) the return is discounted, using the discount factor λ. This factor will progressively decrease the impact of a reward on the previous states. The farther the state from the reward, the smaller the impact on its value.
 
-- **MC**: *Monte Carlo*. Is a special case of TD, where λ is 1. So the return is not discounted.
+- **TD(0)** : Is a special case of TD, where λ is 0. So the value update only take into account the next state.
 
-- **SARSA**: *State Action Reward State Action*. Instead of considering the value of a state, you consider the value of a state-action pair.
+- **Monte Carlo** - MC : Is a special case of TD, where λ is 1. So the return is not discounted.
 
-- **Q-Learning**: Instead of using a policy based on your value function, you use a policy base on something else. For example, during learning you use a random policy to maximize the exploration and when you want to exploit what you learned, you use an e-policy based on the learned function value. This is called **Off-Policy** control and the classic methods are called **On-Policy**.
+- **State Action Reward State Action** - SARSA : Instead of considering the value of a state, you consider the value of a state-action pair.
 
-- **FA**: Instead of a discrete value function, build a continuous value function using curve fitting.
+- **Q-Learning** : Instead of using a policy based on your value function, you use a policy base on something else. This is called **Off-Policy** control and the classic methods are called **On-Policy**. For example, during learning you use a random policy to maximize the exploration and when you want to exploit what you learned, you use an e-policy based on the learned function value.
+
+- **Eligibility Traces** : Allows TD to update the value during the episode. This is called **On-Line** and when you update the value at the end of the episode it is called **Off-line**. Each states has a trace, this trace augment when the state is visited. At each steps, all the traces are decayed. Then at each steps, you update the value of each state using the reward for the current state, and the trace.
+
+- **Function Approximation** - FA : Instead of a discrete value function, build a continuous value function using curve fitting.
+
+### Examples
+- TD(λ) :
+- MC :
+- SARSA :
+- Q :
+- FA :
+
+### Choosing a method
+<!-- | Method | Discrete | Continuous | Reward |
+|:------:|:--------:|:----------:|:------:|
+| TD | ✓ | ✓ | ✓ |
+| MC | ✓ | ✓ | ✓ |
+| SARSA | ✓ | ✓ | ✓ |
+| Q | ✓ | ✓ | ✓ |
+| FA | ✓ | ✓ | ✓ | -->
+
+
+### Notation
+V : Value function
+Q : state-action value function
+G : Return
+TD : Temporal Difference
+MC : MonteCarlo
+SARSA : State Action Reward State Action
+FA : Function Approximation
+
 
 ## Second use, with theoretical knowledge
 - Why some algorithms don't work on some environments ?
