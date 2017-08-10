@@ -78,12 +78,28 @@ I could not use the Gym as I had no practical knowledge on how to program machin
 
 
 ## What I learned
-- You give a value to each states. The objective is to be in the highest value state. What gives you the value for a given state is your **value function**.
+- You code the **agent** that will interact with the **environment**. The environment gives you the state he is in, and you need to find the best action for that state.
 
-- You'll build your value function from experience. The environment will sometime give you a reward when you behave correctly. Using one of the following: **MC**, **TD**, **SARSA**, **Q-Learning**, **FA**, you'll update some states value.
+- To find the best action, you use the **value function**. It map a state to a value.
 
-- To find the highest value state you've seen, you use your experience. This is called **exploitation**. But to find the best state of all, you need some **exploration**. The balance between exploitation and exploration is defined be the **policy**. The policy dictate you behaviour. You can be greedy, which is exploitation or random which lead to exploration. You can also be e-gready, where you'll be random part of the time.
+- The value function is built from experience. The environment will sometimes gives you a **reward** when you behave correctly. Then using one of the following: **TD(λ)**, **MC**, **SARSA**, **Q-Learning**, **FA**, you'll update some states value.
 
+- To find the highest value state you've seen, you use your experience. This is called **exploitation**. But to find the best state of all, you need some **exploration**. The balance between exploitation and exploration is defined be the **policy**. The policy dictate your behaviour. You can be greedy, which is exploitation or random which lead to exploration. You can also be e-greedy, where you'll be random part of the time.
+
+- The learning process is composed in **episode**, and each episode is composed of **steps**. The environment is reset between all episodes. Each steps is composed of: the state, the action taken from this state and the reward received when arriving in this state.
+
+- The return of a state is the cumulated reward received from the first encounter to the end of the episode.
+
+### Updating the value function
+- **TD(λ)**: *Temporal Difference*. Use the **return** to update the value of a state. In TD(λ) the return is discounted, using the discount factor λ. This factor will progressively decrease the impact of a reward on the previous states. The farther the state from the reward, the smaller the impact on its value.
+
+- **MC**: *Monte Carlo*. Is a special case of TD, where λ is 1. So the return is not discounted.
+
+- **SARSA**: *State Action Reward State Action*. Instead of considering the value of a state, you consider the value of a state-action pair.
+
+- **Q-Learning**: Instead of using a policy based on your value function, you use a policy base on something else. For example, during learning you use a random policy to maximize the exploration and when you want to exploit what you learned, you use an e-policy based on the learned function value. This is called **Off-Policy** control and the classic methods are called **On-Policy**.
+
+- **FA**: Instead of a discrete value function, build a continuous value function using curve fitting.
 
 ## Second use, with theoretical knowledge
 - Why some algorithms don't work on some environments ?
