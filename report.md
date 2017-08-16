@@ -77,7 +77,7 @@ agent                       environment
 I could not use the Gym as I had no practical knowledge on how to program machine learning systems, so I followed the tutorial of the Tensorflow library hoping to gain some. This tentative failed as I to little theoretical knowledge and Tensorflow seems to work like magic.
 
 
-## What I learned
+## Notes on Sutton's Book
 ### Overview
 - You code the **agent** that will interact with the **environment**. The environment gives you the state he is in, and you need to find the best action for that state.
 
@@ -107,23 +107,9 @@ I could not use the Gym as I had no practical knowledge on how to program machin
 - **Function Approximation** - FA : Instead of a discrete value function, build a continuous value function using curve fitting.
 
 ### Examples
-- TD(λ) :
-- MC :
-- SARSA :
-- Q :
-- FA :
+See Examples folder
 
-### Choosing a method
-<!-- | Method | Discrete | Continuous | Reward |
-|:------:|:--------:|:----------:|:------:|
-| TD | ✓ | ✓ | ✓ |
-| MC | ✓ | ✓ | ✓ |
-| SARSA | ✓ | ✓ | ✓ |
-| Q | ✓ | ✓ | ✓ |
-| FA | ✓ | ✓ | ✓ | -->
-
-
-### Notation
+#### Notation
 V : Value function
 Q : state-action value function
 G : Return
