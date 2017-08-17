@@ -132,8 +132,8 @@ How do I know my algorithm is exploring to much/no enough.
 # [Sudoku environment](https://github.com/artonge/gym-sudoku)
 I heard the sudoku was considered for teaching, so I made an sudoku environment for OpenAI gym. After testing it I think it's not the best environment.
 
-- First, the grid generation can take some times so it slows the attempts a student can make. This could probably be improved.
-- Second, due to the amount of possible states, it's a hard environment, so not perfect for a first contact with reinforcement learning.
+1. the grid generation can take some times so it slows the attempts a student can make. This could probably be improved.
+2. due to the amount of possible states, it's a hard environment, so not perfect for a first contact with reinforcement learning.
 
 The [Sudoku](https://github.com/artonge/aalto/tree/master/Sudoku) folder contains two trials, but unsuccessful.
 
