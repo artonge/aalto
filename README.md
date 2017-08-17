@@ -10,10 +10,10 @@ As part of my internship, Alex Jung asked me to use the [OpenAI Gym](gym.openai.
 
 
 # Files
-- [Exercises](https://github.com/artonge/aalto/Exercises): solution to some [exercises](https://github.com/dennybritz/reinforcement-learning) I found on github
-- [Sandbox](https://github.com/artonge/aalto/Sandbox): attempts to solve some environments, some of them don't work
-- [CartPole](https://github.com/artonge/aalto/CartPole): implementation of multiple algorithms on the CartPole environment
-- [Sudoku](https://github.com/artonge/aalto/Sudoku): implementation of some algorithm on my sudoku environment
+- [Exercises](https://github.com/artonge/aalto/tree/master/Exercises): solution to some [exercises](https://github.com/dennybritz/reinforcement-learning) I found on github
+- [Sandbox](https://github.com/artonge/aalto/tree/master/Sandbox): attempts to solve some environments, some of them don't work
+- [CartPole](https://github.com/artonge/aalto/tree/master/CartPole): implementation of multiple algorithms on the CartPole environment
+- [Sudoku](https://github.com/artonge/aalto/tree/master/Sudoku): implementation of some algorithm on my sudoku environment
 
 
 # What I knew
