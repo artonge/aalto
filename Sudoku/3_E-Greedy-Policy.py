@@ -5,7 +5,9 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-episodes_nb = 1000
+import gym_sudoku
+
+episodes_nb = 1
 env = gym.make('Sudoku-v0')
 
 episode_rewards     = np.zeros(episodes_nb)
@@ -13,6 +15,7 @@ episode_exploration = np.zeros(episodes_nb)
 
 Q = {}
 RETURNS = {}
+A = {}
 
 
 for episode_i in range(episodes_nb):
@@ -22,31 +25,36 @@ for episode_i in range(episodes_nb):
 	observations = env.reset()
 	episode = []
 	done = False
-
+	t = 0
 	while not done:
-		state = ''
-		for o in observations.flatten(): state += str(math.floor(o))
+		state = str(observations)
+		if t % 1000 == 0:
+			env.render()
 
-		nA = env.action_space.n
+
 		if state not in Q:
 			Q[state] = {}
 			RETURNS[state] = {}
 
 		# 10% chance to not take the best action
-		if random.random() < 0.1:
+		a = np.argmax(Q[state])
+		if random.random() < 0.1 or not a:
 			episode_exploration[episode_i] += 1
-			action = env.action_space.sample()
-		else:
-			action = np.argmax(Q[state])
+			a = env.action_space.sample()
 
-		observations, reward, done, _ = env.step(action)
+		action = str(a)
+		A[action] = a
+
+		observations, reward, done, _ = env.step(A[action])
 		episode.append((state, action, reward))
 		episode_rewards[episode_i] += reward
+
+		t += 1
 
 	for state, action, reward in episode:
 		firstOccurence = next(i for i, x in enumerate(episode) if x[0] == state)
 		G = sum(x[2] for i, x in enumerate(episode[firstOccurence:]))
-		if not RETURNS[state][action]:
+		if action not in RETURNS[state]:
 			RETURNS[state][action] = []
 		RETURNS[state][action].append(G)
 		Q[state][action] = sum(RETURNS[state][action])/len(RETURNS[state][action])

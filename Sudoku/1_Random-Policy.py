@@ -1,6 +1,7 @@
 import gym
 import matplotlib.pyplot as plt
 import sys
+import gym_sudoku
 
 
 # The number of episode we will do
