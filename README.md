@@ -115,6 +115,9 @@ I could not use the Gym as I had no knowledge on how to program machine learning
 ## Implementation of algorithms
 See `CartPole` folder. It contains basics examples of the algorithms seen.
 
+## Solution to some exercises
+This [repo](https://github.com/dennybritz/reinforcement-learning) contains some exercise on multiple algorithms. The `Èxercises` folder contains some solutions.
+
 ### Problems I encountered
 - Why some algorithms don't work on some environments ?
 I tried to implement TD, SARSA, Q-Learning, Eligibility traces on various environments without success.
