@@ -3,20 +3,20 @@ As part of my internship, Alex Jung asked me to use the [OpenAI Gym](gym.openai.
 
 
 # Summary
-- ### What I know
-- ### First use
-- ### Note on Sutton's book
-- ### Sudoku environment
+- ### [What I knew](https://github.com/artonge/aalto#what-i-knew-1)
+- ### [First use](https://github.com/artonge/aalto#first-use-with-little-knowledge-on-machine-learning)
+- ### [Note on Sutton's book](https://github.com/artonge/aalto#notes-on-suttons-book)
+- ### [Sudoku environment](https://github.com/artonge/aalto#sudoku-environment-1)
 
 
 # Files
-- [Exercises](https://github.com/artonge/Exercises): solution to some [exercises](https://github.com/dennybritz/reinforcement-learning) I found on github
-- [Sandbox](https://github.com/artonge/Sandbox): attempts to solve some environments, some of them don't work
-- [CartPole](https://github.com/artonge/CartPole): implementation of multiple algorithms on the CartPole environment
-- [Sudoku](https://github.com/artonge/Sudoku): implementation of some algorithm on my sudoku environment
+- [Exercises](https://github.com/artonge/aalto/Exercises): solution to some [exercises](https://github.com/dennybritz/reinforcement-learning) I found on github
+- [Sandbox](https://github.com/artonge/aalto/Sandbox): attempts to solve some environments, some of them don't work
+- [CartPole](https://github.com/artonge/aalto/CartPole): implementation of multiple algorithms on the CartPole environment
+- [Sudoku](https://github.com/artonge/aalto/Sudoku): implementation of some algorithm on my sudoku environment
 
 
-# What I know
+# What I knew
 **Could have been nice to have**
 - Overview of what machine learning is and how it works
 
