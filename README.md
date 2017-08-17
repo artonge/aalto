@@ -83,7 +83,7 @@ In the Gym's documentations, they first talk about the `env.step` method and wha
 I could not use the Gym as I had no knowledge on how to program machine learning systems, so I followed the tutorial of the Tensorflow library hoping to gain some. This tentative failed and Tensorflow seems to work with magic.
 
 
-# Notes on Sutton's Book
+# Notes on [Sutton's Book](http://incompleteideas.net/sutton/book/bookdraft2017june.pdf)
 ## Overview
 - You code the **agent** that will interact with the **environment**. The environment gives you the state he is in, and you need to find the best action for that state.
 
