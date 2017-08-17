@@ -63,10 +63,10 @@ It gives us information about the type of the observations and actions for a giv
 
 ## Step's return value
 In the Gym's documentations, they first talk about the `env.step` method and what it returns.
-- *Observation*: Gives informations about the environment's state and the phenomenon we are watching. This it what we'll use to feed our machine learning system.
-- *Reward*: Used to tell our system how good the environment state is.
-- *Done*: If true, the observation is over and the environment needs to be reset.
-- *Info*: Contains information about the environment and the reason of its state changes. We're not supposed to use this to train our system !
+- **Observation**: Gives informations about the environment's state and the phenomenon we are watching. This it what we'll use to feed our machine learning system.
+- **Reward**: Used to tell our system how good the environment state is.
+- **Done**: If true, the observation is over and the environment needs to be reset.
+- **Info**: Contains information about the environment and the reason of its state changes. We're not supposed to use this to train our system !
 
 ## Others
 - I can create environments, I did one for the [sudoku](https://github.com/artonge/gym-sudoku)
