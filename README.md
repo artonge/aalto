@@ -135,8 +135,10 @@ How do I know my algorithm is exploring to much/no enough.
 I heard the sudoku was considered for teaching, so I made an sudoku environment for OpenAI gym. After testing it I think it's not the best environment.
 
 1. the grid generation can take some times so it slows the attempts a student can make. This could probably be improved.
-2. due to the amount of possible states, it's a hard environment, so not perfect for a first contact with reinforcement learning.
+2. due to the amount of possible states, it's a hard environment, so not perfect for a first contact with reinforcement learning. Maybe reducing the size of the grid could make it easier.
 
 The [Sudoku](https://github.com/artonge/aalto/tree/master/Sudoku) folder contains two trials, but unsuccessful.
 
 I would recommended the CartPole environment for teaching, because the amount of states is tinier than for the sudoku. Or even the [tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe) game, but this one is maybe too easy.
+
+I can give you access to the gym-sudoku repository on github so you can make modifications, and to the pip account so you can publish them.
