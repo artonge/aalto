@@ -110,9 +110,11 @@ I didn't went further than function approximation. This is because I wanted to f
 - **Function Approximation** - FA : Instead of a discrete value function, build a continuous value function using curve fitting.
 
 ## Implementation of algorithms
-- The [CartPole](https://github.com/artonge/aalto/tree/master/CartPole): folder contains basics examples only on the CartPole environment.
-- The [Exercises](https://github.com/artonge/aalto/tree/master/Exercises): folder contains some solutions to the exercises found in this [repository](https://github.com/dennybritz/reinforcement-learning).
-- The [Sandbox](https://github.com/artonge/aalto/tree/master/Sandbox) folder contains attempts to solve some environments.
+In chronological order:
+1. It this [repository](https://github.com/artonge/RL-tic-tac-toe), I wrote a [tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe) environment and an agent that learn to play it using the Monte Carlo method. The work is in [golang](https://golang.org/).
+2. The [Sandbox](https://github.com/artonge/aalto/tree/master/Sandbox) folder contains attempts to solve some environments.
+3. The [Exercises](https://github.com/artonge/aalto/tree/master/Exercises) folder contains some solutions to the exercises found in this [repository](https://github.com/dennybritz/reinforcement-learning).
+4. The [CartPole](https://github.com/artonge/aalto/tree/master/CartPole) folder contains basics examples only on the CartPole environment.
 
 ### Problems I encountered
 - Why some algorithms don't work on some environments ?
@@ -139,6 +141,6 @@ I heard the sudoku was considered for teaching, so I made an sudoku environment 
 
 The [Sudoku](https://github.com/artonge/aalto/tree/master/Sudoku) folder contains two trials, but unsuccessful.
 
-I would recommended the CartPole environment for teaching, because the amount of states is tinier than for the sudoku. Or even the [tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe) game, but this one is maybe too easy.
+I would recommended the CartPole environment for teaching, because the amount of states is tinier than for the sudoku. Or even the tic-tac-toe game, but this one is maybe too easy.
 
 I can give you access to the gym-sudoku repository on github so you can make modifications, and to the pip account so you can publish them.
