@@ -9,13 +9,6 @@ As part of my internship, Alex Jung asked me to use the [OpenAI Gym](gym.openai.
 - ### [Sudoku environment](https://github.com/artonge/aalto#sudoku-environment-1)
 
 
-# Files
-- [Exercises](https://github.com/artonge/aalto/tree/master/Exercises): solution to some [exercises](https://github.com/dennybritz/reinforcement-learning) I found on github
-- [Sandbox](https://github.com/artonge/aalto/tree/master/Sandbox): attempts to solve some environments, some of them don't work
-- [CartPole](https://github.com/artonge/aalto/tree/master/CartPole): implementation of multiple algorithms on the CartPole environment
-- [Sudoku](https://github.com/artonge/aalto/tree/master/Sudoku): implementation of some algorithm on my sudoku environment
-
-
 # What I knew
 **Could have been nice to have**
 - Overview of what machine learning is and how it works
@@ -59,11 +52,11 @@ for i_episode in range(20):
 
 ## The framework
 ```
-______>______action______>______
-|                               |
-agent                       environment
-|                               |
----<---observation/reward---<---
+   ___>_____(action)_____>______
+  |                             |
+[agent]                      [environment]
+  |                             |
+  |__<__(observation/reward)_<__|
 ```
 The gym allow us the only code the agent, and to forget about the environment. Therefore we can easily use external libraries like Tensorflow.
 It gives us information about the type of the observations and actions for a given environment.
@@ -84,6 +77,8 @@ I could not use the Gym as I had no knowledge on how to program machine learning
 
 
 # Notes on [Sutton's Book](http://incompleteideas.net/sutton/book/bookdraft2017june.pdf)
+I didn't went further than function approximation. This is because I wanted to fully understand function approximation before using deep reinforcement learning. But unfortunately I didn't understand it as much as I wanted. I only found one [example](https://github.com/dennybritz/reinforcement-learning/blob/master/FA/Q-Learning%20with%20Value%20Function%20Approximation%20Solution.ipynb) and it was using an external library to do all the work, so it wasn't helpful.
+
 ## Overview
 - You code the **agent** that will interact with the **environment**. The environment gives you the state he is in, and you need to find the best action for that state.
 
@@ -95,10 +90,10 @@ I could not use the Gym as I had no knowledge on how to program machine learning
 
 - The learning process is composed of **episodes**, and each episode is composed of **steps**. The environment is reset between all episodes. Each steps is composed of a state, an action to go to the next state, and a reward received when arriving in the state.
 
-- The return of a state is the cumulated reward received from the first encounter to the end of the episode.
+- The **return** of a state is the cumulated reward received from the first encounter to the end of the episode.
 
 ## Methods to update the value function
-- **Temporal Difference** - TD(λ) : Use the **return** to update the value of a state. In TD(λ) the return is discounted, using the discount factor λ. This factor will progressively decrease the impact of a reward on the previous states. The farther the state from the reward, the smaller the impact on its value.
+- **Temporal Difference** - TD(λ) : Use the return to update the value of a state. In TD(λ) the return is discounted, using the discount factor λ. This factor will progressively decrease the impact of a reward on the previous states. The farther the state from the reward, the smaller the impact on its value.
 
 - **TD(0)** : Is a special case of TD, where λ is 0. So the value update only take into account the next state.
 
@@ -113,10 +108,9 @@ I could not use the Gym as I had no knowledge on how to program machine learning
 - **Function Approximation** - FA : Instead of a discrete value function, build a continuous value function using curve fitting.
 
 ## Implementation of algorithms
-See `CartPole` folder. It contains basics examples of the algorithms seen.
-
-## Solution to some exercises
-This [repo](https://github.com/dennybritz/reinforcement-learning) contains some exercise on multiple algorithms. The `Èxercises` folder contains some solutions.
+- The [CartPole](https://github.com/artonge/aalto/tree/master/CartPole): folder contains basics examples only on the CartPole environment.
+- The [Exercises](https://github.com/artonge/aalto/tree/master/Exercises): folder contains some solutions to the exercises found in this [repository](https://github.com/dennybritz/reinforcement-learning).
+- The [Sandbox](https://github.com/artonge/aalto/tree/master/Sandbox) folder contains attempts to solve some environments.
 
 ### Problems I encountered
 - Why some algorithms don't work on some environments ?
@@ -130,20 +124,19 @@ How do I know my algorithm is exploring to much/no enough.
 - Function approximation seems to be impossible without a library to support the core computing. Didn't find an example that show the manipulation of the weights, update and prediction. I tried to implement FA using polynomials, without success. I don't grasp fully how it works.
 
 ### Notation
-V : Value function
-Q : state-action value function
-G : Return
-TD : Temporal Difference
-MC : MonteCarlo
-SARSA : State Action Reward State Action
-FA : Function Approximation
-
-
+- V : Value function
+- Q : state-action value function
+- G : Return
+- TD : Temporal Difference
+- MC : MonteCarlo
+- SARSA : State Action Reward State Action
+- FA : Function Approximation
 
 
 # [Sudoku environment](https://github.com/artonge/gym-sudoku)
 I heard the sudoku was considered for teaching, so I made an sudoku environment for OpenAI gym. After testing it I think it's not the best environment.
-	- First, the grid generation can take some times so it slows the attempts a student can make.
-	- Second, du to the amount of possible state, it's a hard environment, so not perfect for a first contact with reinforcement learning.
+	- First, the grid generation can take some times so it slows the attempts a student can make. This could probably be improved.
+	- Second, due to the amount of possible states, it's a hard environment, so not perfect for a first contact with reinforcement learning.
+The [Sudoku](https://github.com/artonge/aalto/tree/master/Sudoku) folder contains two trials, but unsuccessful.
 
 I would recommended the CartPole for teaching, as the amount of states is tinier than for the sudoku. Or even the [tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe) game, but it's maybe too easy.
