@@ -10,13 +10,13 @@ As part of my internship, Alex Jung asked me to use the [OpenAI Gym](gym.openai.
 
 
 # What I knew
-**Could have been nice to have**
-- Overview of what machine learning is and how it works
-
 **Naive knowledge**
 Deep learning is a kind of AI base on how humans learn. It consists of layers which will, one after the other, transform the data and produce an output. Each layer passes its output to the next layer. The final output is our answer. Those layers are mimicking neurones and how a human brain works.
-- vision: We feed a system lots of data telling him what those are. Later we ask him if a new piece of data is of the same kind than the previous data.
-- behavior: Given some observations, we ask a system to make operations to achieve a goal. The system can then learn what suit of operations make it closer or further from the goal. The more it practices, the better it gets.
+- **vision**: We feed a system lots of data telling him what those are. Later we ask him if a new piece of data is of the same kind than the previous data.
+- **behavior**: Given some observations, we ask a system to make operations to achieve a goal. The system can then learn what suit of operations make it closer or further from the goal. The more it practices, the better it gets.
+
+**Could have been nice to have**
+- Overview of what machine learning is and how it works
 
 
 # First use, with little knowledge on machine learning
@@ -69,8 +69,8 @@ In the Gym's documentations, they first talk about the `env.step` method and wha
 - **Info**: Contains information about the environment and the reason of its state changes. We're not supposed to use this to train our system !
 
 ## Others
-- I can create environments, I did one for the [sudoku](https://github.com/artonge/gym-sudoku)
-- I can record results, upload them on there servers and share them with any one.
+- You can create environments, I did one for the [sudoku](https://github.com/artonge/gym-sudoku)
+- You can record results, upload them on there servers and share them with any one.
 
 ## Attempt to use the gym with Tensorflow
 I could not use the Gym as I had no knowledge on how to program machine learning systems, so I followed the tutorial of the Tensorflow library hoping to gain some. This tentative failed and Tensorflow seems to work with magic.
@@ -121,22 +121,20 @@ Only MC seems to work but only when the environment state is discrete or not to 
 I've heard about over-fitting but not sure how to detect and prevent it.
 How do I know my algorithm is exploring to much/no enough.
 
-- Function approximation seems to be impossible without a library to support the core computing. Didn't find an example that show the manipulation of the weights, update and prediction. I tried to implement FA using polynomials, without success. I don't grasp fully how it works.
+- Function approximation seems to be impossible without a library to support the core computing. Didn't find an example that show the manipulation of the weights, update and prediction. I tried to implement FA using polynomials, without success.
 
 ### Notation
 - V : Value function
 - Q : state-action value function
 - G : Return
-- TD : Temporal Difference
-- MC : MonteCarlo
-- SARSA : State Action Reward State Action
-- FA : Function Approximation
 
 
 # [Sudoku environment](https://github.com/artonge/gym-sudoku)
 I heard the sudoku was considered for teaching, so I made an sudoku environment for OpenAI gym. After testing it I think it's not the best environment.
-	- First, the grid generation can take some times so it slows the attempts a student can make. This could probably be improved.
-	- Second, due to the amount of possible states, it's a hard environment, so not perfect for a first contact with reinforcement learning.
+
+- First, the grid generation can take some times so it slows the attempts a student can make. This could probably be improved.
+- Second, due to the amount of possible states, it's a hard environment, so not perfect for a first contact with reinforcement learning.
+
 The [Sudoku](https://github.com/artonge/aalto/tree/master/Sudoku) folder contains two trials, but unsuccessful.
 
-I would recommended the CartPole for teaching, as the amount of states is tinier than for the sudoku. Or even the [tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe) game, but it's maybe too easy.
+I would recommended the CartPole environment for teaching, because the amount of states is tinier than for the sudoku. Or even the [tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe) game, but this one is maybe too easy.
