@@ -48,7 +48,7 @@ for i_episode in range(20):
 ```
 
 **Could have been nice to have**
-- A working example base on an environment of OpenAI Gym. If possible without an external library
+- A working example based on an environment of OpenAI Gym. If possible without an external library
 
 ## The framework
 ```
@@ -74,6 +74,7 @@ In the Gym's documentations, they first talk about the `env.step` method and wha
 
 ## Attempt to use the gym with Tensorflow
 I could not use the Gym as I had no knowledge on how to program machine learning systems, so I followed the tutorial of the Tensorflow library hoping to gain some. This tentative failed and Tensorflow seems to work with magic.
+*I though that it was mandatory to use a library like Tensorflow to have any results in reinforcement learning, but you can go far without.*
 
 
 # Notes on [Sutton's Book](http://incompleteideas.net/sutton/book/bookdraft2017june.pdf)
