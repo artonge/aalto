@@ -70,7 +70,7 @@ In the Gym's documentations, they first talk about the `env.step` method and wha
 
 ## Others
 - You can create environments, I did one for the [sudoku](https://github.com/artonge/gym-sudoku)
-- You can record results, upload them on there servers and share them with any one.
+- You can record results, upload them on their servers and share them with any one.
 
 ## Attempt to use the gym with Tensorflow
 I could not use the Gym as I had no knowledge on how to program machine learning systems, so I followed the tutorial of the Tensorflow library hoping to gain some. This tentative failed and Tensorflow seems to work with magic.
